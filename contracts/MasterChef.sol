@@ -64,7 +64,7 @@ contract MasterChef is Ownable {
     // SUSHI tokens created per block.
     uint256 public sushiPerBlock;
     // Bonus muliplier for early sushi makers.
-    uint256 public constant BONUS_MULTIPLIER = 10;
+    uint256 public  bonusMultiPlier = 10;
     // The migrator contract. It has a lot of power. Can only be set through governance (owner).
     IMigratorChef public migrator;
     // Info of each pool.
@@ -163,12 +163,12 @@ contract MasterChef is Ownable {
         returns (uint256)
     {
         if (_to <= bonusEndBlock) {
-            return _to.sub(_from).mul(BONUS_MULTIPLIER);
+            return _to.sub(_from).mul(bonusMultiPlier);
         } else if (_from >= bonusEndBlock) {
             return _to.sub(_from);
         } else {
             return
-                bonusEndBlock.sub(_from).mul(BONUS_MULTIPLIER).add(
+                bonusEndBlock.sub(_from).mul(bonusMultiPlier).add(
                     _to.sub(bonusEndBlock)
                 );
         }
@@ -294,4 +294,29 @@ contract MasterChef is Ownable {
         require(msg.sender == devaddr, "dev: wut?");
         devaddr = _devaddr;
     }
+
+    // Update sushi address.
+    function updatesushi(SushiToken _sushi) public {
+        require(msg.sender == devaddr, "dev: wut?");
+        sushi = _sushi;
+    }
+
+    function updatesushiPerBlock(uint256 _sushiPerBlock) public {
+        require(msg.sender == devaddr, "dev: wut?");
+        massUpdatePools();
+        sushiPerBlock = _sushiPerBlock;
+    }
+
+    function updatebonusEndBlock(uint256 _bonusEndBlock) public {
+        require(msg.sender == devaddr, "dev: wut?");
+        massUpdatePools();
+        bonusEndBlock = _bonusEndBlock;
+    }
+
+    function updatebonusMultiPlier(uint256 _bonusMultiPlier) public {
+        require(msg.sender == devaddr, "dev: wut?");
+        massUpdatePools();
+        bonusMultiPlier = _bonusMultiPlier;
+    }
+
 }

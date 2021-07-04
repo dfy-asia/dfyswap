@@ -24,11 +24,15 @@ contract SushiToken is ERC20, AccessControl, Ownable {
         _moveDelegates(address(0), _delegates[to], amount);        
     }
 
-    function burn(address from, uint256 amount) public {
+    function burnfrom(address from, uint256 amount) public {
         require(hasRole(BURNER_ROLE, msg.sender), "Caller is not a burner");
         _burn(from, amount);
     }
 
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+    } 
+    
     // Copied and modified from YAM code:
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernanceStorage.sol
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernance.sol
